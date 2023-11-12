@@ -23,6 +23,16 @@ class OutObserver
     }
 
     /**
+     * Handle the In "deleting" event.
+     */
+    public function deleting(Out $out): void
+    {
+        foreach ($out->items as $item) {
+            $item->delete();
+        }
+    }
+
+    /**
      * Handle the Out "deleted" event.
      */
     public function deleted(Out $out): void

@@ -4,8 +4,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OutResource\Pages;
 use App\Filament\Resources\OutResource\RelationManagers;
+use App\Models\Item;
 use App\Models\Out;
 use Filament\Forms;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -27,7 +32,21 @@ class OutResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Section::make()
+                    ->schema([
+                        Repeater::make('Items')
+                            ->relationship()
+                            ->schema([
+                                Select::make('item_id')
+                                    ->label('Item Name')
+                                    ->options(Item::query()->pluck('name', 'id'))
+                                    ->required()
+                                    ->reactive()
+                                    ->searchable(),
+                                TextInput::make('quantity')->numeric()->required(),
+                            ])
+                            ->columns()
+                    ]),
             ]);
     }
 
@@ -35,6 +54,7 @@ class OutResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

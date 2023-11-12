@@ -11,7 +11,9 @@ class OutItemObserver
      */
     public function created(OutItem $outItem): void
     {
-        //
+        $outItem->item->update([
+            'quantity' =>  $outItem->item->quantity - $outItem->quantity
+        ]);
     }
 
     /**
@@ -19,7 +21,21 @@ class OutItemObserver
      */
     public function updated(OutItem $outItem): void
     {
-        //
+        if ($outItem->isDirty('quantity')) {
+            $outItem->item->update([
+                'quantity' =>  $outItem->item->quantity - $outItem->quantity + $outItem->getOriginal('quantity')
+            ]);
+        }
+    }
+
+    /**
+     * Handle the In "deleting" event.
+     */
+    public function deleting(OutItem $outItem): void
+    {
+        $outItem->item->update([
+            'quantity' =>  $outItem->item->quantity + $outItem->quantity
+        ]);
     }
 
     /**

@@ -23,13 +23,15 @@ class InObserver
     }
 
     /**
-     * Handle the In "deleted" event.
+     * Handle the In "deleting" event.
      */
     public function deleting(In $in): void
     {
-        $in->items()->delete();
+        foreach ($in->items as $item) {
+            $item->delete();
+        }
     }
-    
+
     /**
      * Handle the In "deleted" event.
      */
