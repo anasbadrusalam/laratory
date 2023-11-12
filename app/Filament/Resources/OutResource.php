@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class OutResource extends Resource
 {
     protected static ?string $pluralModelLabel = 'Out';
-    
+
     protected static ?int $navigationSort = 2;
 
     protected static ?string $model = Out::class;
@@ -54,7 +54,8 @@ class OutResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
