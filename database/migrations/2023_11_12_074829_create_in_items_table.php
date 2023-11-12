@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('in_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('in_id')->cascadeOnDelete();
-            $table->foreignId('item_id')->cascadeOnDelete();
+            $table->foreignId('in_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('item_id')->constrained()->cascadeOnDelete();
             $table->bigInteger('quantity');
             $table->timestamps();
         });

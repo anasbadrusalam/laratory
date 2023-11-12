@@ -5,7 +5,12 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\InResource\Pages;
 use App\Filament\Resources\InResource\RelationManagers;
 use App\Models\In;
+use App\Models\Item;
 use Filament\Forms;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -15,6 +20,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class InResource extends Resource
 {
+    protected static ?string $pluralModelLabel = 'In';
+
+    protected static ?int $navigationSort = 1;
+
     protected static ?string $model = In::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -23,7 +32,22 @@ class InResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Section::make()
+                    ->schema([
+                        Repeater::make('Items')
+                            ->relationship()
+                            ->schema([
+                                Select::make('item_id')
+                                    ->label('Item Name')
+                                    ->options(Item::query()->pluck('name', 'id'))
+                                    ->required()
+                                    ->reactive()
+                                    ->searchable(),
+                                TextInput::make('quantity')->numeric()->required(),
+                            ])
+                            ->columns()
+                    ]),
+
             ]);
     }
 
@@ -31,7 +55,14 @@ class InResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
